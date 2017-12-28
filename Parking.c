@@ -1,5 +1,33 @@
 #include "Parking.h"
 
+void viderBuffer()
+{
+    int c = 0;
+    while (c != '\n' && c != EOF)
+    {
+        c = getchar();
+    }
+}
+
+void proposition_contrat()
+{
+	char cat;
+	if(read(s1, &cat, sizeof(char)) > 0)
+	{
+		write(s1, config.ip, sizeof(config.ip));
+		write(s1, config.ip, sizeof(config.ip));
+		write(s1, config.ip, sizeof(config.ip));
+		write(s1, config.ip, sizeof(config.ip));
+	}
+	else
+		perror("echec du read catégorie");
+}
+
+void cout_stationnement()
+{
+
+}
+
 int main()
 {
 	int s = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
@@ -9,9 +37,6 @@ int main()
 	else
 	{
 		printf("création réussie de la socket\n");
-
-		//création de la structure stockant les données du serveur
-		Configuration config;
 
 		//struct server
 		struct sockaddr_in server;
@@ -42,9 +67,22 @@ int main()
 	  				else
 	  				{
 	  					if(fork() == 0)
+							{
 	  						printf("reussite du accept\n");
 								//suite du code
-								printf("c'est déjà bien\n");
+								int nb;
+								do {
+									if(read(s1, &nb, sizeof(int)) > 0)
+										if (nb == 1) {
+											proposition_contrat();
+										}
+										if (nb == 2) {
+											cout_stationnement();
+										}
+									else
+										perror("echec du read type de demande");
+								} while(nb != 9);
+							}
 	  					else
 	  						s1 = accept(s, NULL, NULL);
 	  				}
