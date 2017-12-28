@@ -11,7 +11,9 @@
 /*
 typedef struct
 {
-
-};
+  num_port
+  ip
+  socket (int)
+}monbeauserveur;
 */
 #endif

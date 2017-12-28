@@ -10,11 +10,14 @@ int main()
 	{
 		printf("création réussie de la socket\n");
 
+		//création de la structure stockant les données du serveur
+		Configuration config;
+
 		//struct server
 		struct sockaddr_in server;
 		server.sin_family = AF_INET;
-		server.sin_port = htons(1025);
-		server.sin_addr.s_addr = inet_addr("192.168.4.235");
+		server.sin_port = htons(config.port);
+		server.sin_addr.s_addr = inet_addr(config.ip);
 
 		int b = bind(s, (struct sockaddr *)&server, sizeof(server));
 
@@ -26,25 +29,27 @@ int main()
 		else
 		{
 			printf("bind réussi\n");
-  		if(listen(s, 1) == -1)
-  			perror("echec du listen\n");
-  		else
-  		{
-  			printf("reussite du listen\n");
-  			while(1)
-  			{
-  				int s1 = accept(s, NULL, NULL);
-  				if(s1 == -1)
-  					perror("echec du accept\n");
-  				else
-  				{
-  					if(fork() == 0)
-  						printf("reussite du accept\n");
-  					else
-  						s1 = accept(s, NULL, NULL);
-  				}
-  			}
-  		}
+	  		if(listen(s, 1) == -1)
+	  			perror("echec du listen\n");
+	  		else
+	  		{
+	  			printf("reussite du listen\n");
+	  			while(1)
+	  			{
+	  				int s1 = accept(s, NULL, NULL);
+	  				if(s1 == -1)
+	  					perror("echec du accept\n");
+	  				else
+	  				{
+	  					if(fork() == 0)
+	  						printf("reussite du accept\n");
+								//suite du code
+								printf("c'est déjà bien\n");
+	  					else
+	  						s1 = accept(s, NULL, NULL);
+	  				}
+	  			}
+	  		}
 		}
 	}
 	return 0;
