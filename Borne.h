@@ -8,10 +8,10 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <unistd.h>
-
+/*
 typedef struct
 {
 
 };
-
+*/
 #endif

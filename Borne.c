@@ -1,5 +1,14 @@
 #include "Borne.h"
 
+void viderBuffer()
+{
+    int c = 0;
+    while (c != '\n' && c != EOF)
+    {
+        c = getchar();
+    }
+}
+
 int main()
 {
 	int s = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
@@ -13,8 +22,23 @@ int main()
 		//struct server
 		struct sockaddr_in server;
 		server.sin_family = AF_INET;
-		server.sin_port = htons(1025);
-		server.sin_addr.s_addr = inet_addr("192.168.4.235");
+		int port = 0;
+		printf("Saisir le port voulu ( entre  5 500 et 65 500 ) : \n");
+		do {
+			if(scanf("%d", &port)!=1)
+				viderBuffer();
+		} while( port >= 65500 || port <= 5500 );
+
+		char ipAdr[15];
+		printf("Saisir l'adresse ip voulu : \n");
+		do {
+			if(scanf("%s", &ipAdr)!=1)
+				viderBuffer();
+			printf("%s\n", ipAdr);
+		} while( inet_pton(AF_INET, ipAdr, &(server.sin_addr)) != 1 );
+
+		server.sin_port = htons(port);
+		server.sin_addr.s_addr = inet_addr(ipAdr);
 
 		if(connect(s, (struct sockaddr *)&server, sizeof(server)) < 0)
 			perror("echec de la connection\n");
