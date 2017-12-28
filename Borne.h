@@ -8,12 +8,13 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <unistd.h>
-/*
+#include <string.h>
+
 typedef struct
 {
-  num_port
-  ip
-  socket (int)
+  int num_port;
+  char ip[20];
+  int socket;
 }monbeauserveur;
-*/
+
 #endif
