@@ -11,7 +11,7 @@
 
 typedef struct Voiture Voiture;
 
-struct voiture // une voiture avec des données par défault
+struct voiture // une voiture
 {
   char plaque[20];
   char categorie;
@@ -20,7 +20,7 @@ struct voiture // une voiture avec des données par défault
 
 typedef struct Parking Parking;
 
-struct Parking // un parking avec des données par défault
+struct Parking // un parking
 {
   int nb_place[5];
   int heure_forfait[5];
@@ -30,7 +30,7 @@ struct Parking // un parking avec des données par défault
 
 typedef struct Configuration Configuration;
 
-struct Configuration // un server avec des données par défault
+struct Configuration // un server
 {
   int port;
   char ip[20];
@@ -38,6 +38,7 @@ struct Configuration // un server avec des données par défault
 };
 
 //création de la structure stockant les données du serveur
-Configuration config = {8000, "127.0.0.1", {{0, 1, 0, 1},{2, 4, 6, 8},{1.5, 2, 2.5, 3, 3.5},{5, 10, 15, 20, 25}}};
+Configuration config = {8001, "127.0.0.1", {{0, 1, 0, 1},{2, 4, 6, 8},{1.5, 2, 2.5, 3, 3.5},{5, 10, 15, 20, 25}}};
+Voiture list_voiture[] = { , , , }
 
 #endif

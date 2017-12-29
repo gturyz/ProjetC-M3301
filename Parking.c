@@ -9,25 +9,6 @@ void viderBuffer()
     }
 }
 
-void proposition_contrat()
-{
-	char cat;
-	if(read(s1, &cat, sizeof(char)) > 0)
-	{
-		write(s1, config.ip, sizeof(config.ip));
-		write(s1, config.ip, sizeof(config.ip));
-		write(s1, config.ip, sizeof(config.ip));
-		write(s1, config.ip, sizeof(config.ip));
-	}
-	else
-		perror("echec du read catégorie");
-}
-
-void cout_stationnement()
-{
-
-}
-
 int main()
 {
 	int s = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
@@ -73,15 +54,27 @@ int main()
 								int nb;
 								do {
 									if(read(s1, &nb, sizeof(int)) > 0)
-										if (nb == 1) {
-											proposition_contrat();
+										if (nb == 1)
+										{
+											char cat;
+											if(read(s1, &cat, sizeof(char)) > 0) //on lit la catégorie
+											{
+												int i = cat - 'A';
+												write(s1, config.ip, sizeof(config.ip)); //on envoie qui on est
+												write(s1, &config.donnees.heure_forfait[i], sizeof(config.donnees.heure_forfait[i])); // on envoie la durée maximale
+												write(s1, &config.donnees.prix_forfait[i], sizeof(config.donnees.prix_forfait[i])); // on envoie le prix de l'heure quand on est dans le forfait
+												write(s1, &config.donnees.prix_hors_forfait[i], sizeof(config.donnees.prix_hors_forfait[i])); //on envoie le prix de l'heure quand on est hors forfait
+											}
+											else
+												perror("echec du read catégorie");
 										}
-										if (nb == 2) {
-											cout_stationnement();
+										if (nb == 2)
+										{
+												//lire la plaque de la voiture
 										}
 									else
 										perror("echec du read type de demande");
-								} while(nb != 9);
+								} while(nb == 9);
 							}
 	  					else
 	  						s1 = accept(s, NULL, NULL);
