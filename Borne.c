@@ -81,11 +81,11 @@ int main()
 
   do {
 
-    printf("Saisir le parking voulu : \n");
-    do {
-      if(scanf("%d", &nbPark)!=1)
-        viderBuffer();
-    } while( nbPark <= -1 && nbPark >= nb);
+    //printf("Saisir le parking voulu : \n");
+    //do {
+    //  if(scanf("%d", &nbPark)!=1)
+    //    viderBuffer();
+    //} while( nbPark <= -1 && nbPark >= nb);
     Voiture voiture;
     printf("Saisir plaque de la voiture : \n");
     while(scanf("%s", &voiture.plaque)!=1){
@@ -107,6 +107,7 @@ int main()
         viderBuffer();
     } while( f != 1 && f != 2 && f != 9 );
 
+
     if( f == 1 ) {
 
       printf("Saisir la duree du stationnement envisagé : \n");
@@ -114,10 +115,32 @@ int main()
         if(scanf("%d", &voiture.duree)!=1)
           viderBuffer();
       } while( voiture.duree <= 0 );
+
+      //pour TOUS les parking : for
+        //envoyer le numero saisit au server en cours
+        //envoyer la catégorie de la voiture : char
+        //lire l'ip du serveur : char[20]
+        //lire la duree du forfait : int
+        //lire le prix_forfait : float
+        //lire le prix_hors_forfait float
+        //faire le calcul magique : on passera par une fonction (a faire)
+        //afficher le cout pour la durée demandée : ex : pour 2h
+        //afficher le cout pour la durée + 1 h : ex : pour 2+1=3h
+        //afficher le cout pour la durée double : ex : pour 2*2=4h
+      //fin for
+
     }
 
     if( f == 2 ) {
-
+      //pour TOUS les parking : for
+        //envoyer le numero saisit au server en cours
+        //lire un entier : int
+        //si l'entier vaut 0
+          //lire l'ip du serveur : char[20]
+          //lire la durée de stationnement actuelle : int
+          //lire la durée du forfait : int
+          //lire le prix a payer : float
+      //fin for
     }
 
   } while( f != 9 );

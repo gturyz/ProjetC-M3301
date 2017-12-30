@@ -49,7 +49,12 @@ Configuration config = {
     {5, 10, 15, 20, 25}}
 };
 
-//initilisation du stockage des voiture
-Voiture vA ={"AA-AAA-AA", 'A', 1};
+//initilisation du stockage des voitures
+int nb_voiture;
+
+Voiture v1 ={"AA-AAA-AA", 'A', 1};
+Voiture v2 ={"BB-BBB-BB", 'B', 2};
+Voiture v3 ={"CC-CCC-CC", 'C', 3};
+Voiture v4 ={"DD-DDD-DD", 'D', 4};
 
 #endif

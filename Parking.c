@@ -11,20 +11,20 @@ void viderBuffer()
 
 void ajouterVoiture(Voiture v, Voiture *p)
 {
-
-};
+	*p = v;
+}
 
 int main()
 {
-	Voiture list_voiture[10];
-	for (int i = 0; i < 10; i++)
-	{
-		ajouterVoiture(vA, &list_voiture[i]);
-	}
+	Voiture list_voiture[nb_voiture];
 
+	ajouterVoiture(v1, &list_voiture[0]);
+	ajouterVoiture(v2, &list_voiture[1]);
+	ajouterVoiture(v3, &list_voiture[2]);
+	ajouterVoiture(v4, &list_voiture[3]);
 
 	int s = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
-//		       domaine  type         protocle
+	//		       domaine  type         protocle
 	if(s == -1)
 		perror("echec de la création de la socket\n");
 	else
@@ -64,8 +64,10 @@ int main()
 	  						printf("reussite du accept\n");
 								//suite du code
 								int nb;
+								//on regarde ce que la borne nous demande de faire
 								do {
 									if(read(s1, &nb, sizeof(int)) > 0)
+									{
 										if (nb == 1)
 										{
 											char cat;
@@ -83,10 +85,19 @@ int main()
 										if (nb == 2)
 										{
 												//lire la plaque de la voiture
+												//si on a la voiture en stock
+													//on envoie 0
+													//on dit qui on est
+													//on donne la duree de stationnement actuelle
+													//on donne la duree du prix_forfait
+													//on donne le prix a payer
+												//sinon
+													//on envoie 1
 										}
+									}
 									else
 										perror("echec du read type de demande");
-								} while(nb == 9);
+								} while(nb != 9);
 							}
 	  					else
 	  						s1 = accept(s, NULL, NULL);
