@@ -89,36 +89,34 @@ int main()
 
   int f = 0;
 
-  int nbPark = -1;
+  //int nbPark = -1;
+  //printf("Saisir le parking voulu : \n"); // plus necessaire car on va
+  //do {                                    // demander a tous les parkings
+  //  if(scanf("%d", &nbPark)!=1)           // en même temps
+  //    viderBuffer();                      //
+  //} while( nbPark <= -1 && nbPark >= nb); //
+  Voiture voiture;
+  printf("Saisir plaque de la voiture : \n");
+  while(scanf("%s", &voiture.plaque)!=1){
+    viderBuffer();
+  }
+  printf("Quelle categorie ? A B C D E \n");
+  do {
+    if(scanf("%s", &voiture.categorie)!=1)
+      viderBuffer();
+  } while(  voiture.categorie != 'A' &&
+            voiture.categorie != 'B' &&
+            voiture.categorie != 'C' &&
+            voiture.categorie != 'D' &&
+            voiture.categorie != 'E');
 
   do {
-
-    //printf("Saisir le parking voulu : \n"); // plus necessaire car on va
-    //do {                                    // demander a tous les parkings
-    //  if(scanf("%d", &nbPark)!=1)           // en même temps
-    //    viderBuffer();                      //
-    //} while( nbPark <= -1 && nbPark >= nb); //
-    Voiture voiture;
-    printf("Saisir plaque de la voiture : \n");
-    while(scanf("%s", &voiture.plaque)!=1){
-      viderBuffer();
-    }
-    write(mesbeauxserveur[nbPark].socket, voiture.plaque, sizeof(voiture.plaque));
-    printf("Quel categorie ? A B C D E \n");
+    printf("\n---MENU---\n1 : Pour etudier une proposition de contrat\n2 : Pour voir le cout de stationnement de votre voiture\n9 : sortir\n");
     do {
-      if(scanf("%s", &voiture.categorie)!=1)
-        viderBuffer();
-    } while(  voiture.categorie != 'A' &&
-              voiture.categorie != 'B' &&
-              voiture.categorie != 'C' &&
-              voiture.categorie != 'D' &&
-              voiture.categorie != 'E');
-
-    do {
+      f = 0;
       if(scanf("%d", &f)!=1)
         viderBuffer();
     } while( f != 1 && f != 2 && f != 9 );
-
 
     if( f == 1 ) {
 
@@ -165,7 +163,9 @@ int main()
       for (int i = 0; i < nb; i++)
       {
         //envoyer le numero saisit au server en cours
-        write(mesbeauxserveur[i].socket, &f, sizeof(f));
+        write(mesbeauxserveur[i].socket, &f, sizeof(int));
+        //envoie de la plaque au serveur
+        write(mesbeauxserveur[i].socket, &voiture.plaque, sizeof(voiture.plaque));
         //lire un entier : int
         int rep = -1;
         read(mesbeauxserveur[i].socket, &rep, sizeof(int));
@@ -186,11 +186,23 @@ int main()
           read(mesbeauxserveur[i].socket, &cout, sizeof(cout));
           //afficher les infos
           printf("Pour le parking %s, la voiture %s est stationnée depuis %d heures.\nLe cout est de %f\n", ip, voiture.plaque, duree_stationnement, cout);
+          printf("\n");
+        }
+        else
+        {
+          printf("aucun parking n'a de voiture avec cette plaque\n");
         }
       }
     }
 
-  } while( f != 9 );
+    if (f == 9)
+    {
+      for (int i = 0; i < nb; i++) {
+
+        close(mesbeauxserveur[i].socket);
+      }
+    }
+  } while(f != 9);
 
 	//tant que un charactère de fin ne sera pas entré il faut demander si le client veut faire le 2.1 ou le 2.2 du sujet
 

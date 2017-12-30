@@ -50,7 +50,7 @@ float prix_a_payer(char categorie, int duree, Configuration* p); //calcul le pri
 
 //création de la structure stockant les données du serveur
 Configuration config = {
-  8001,
+  8006,
   "127.0.0.1",
   {
     {0, 1, 0, 1},
@@ -60,11 +60,12 @@ Configuration config = {
 };
 
 //initilisation du stockage des voitures
-int nb_voiture;
+int nb_voiture = 4;
 
 Voiture v1 ={"AA-AAA-AA", 'A', 1};
 Voiture v2 ={"BB-BBB-BB", 'B', 2};
 Voiture v3 ={"CC-CCC-CC", 'C', 3};
 Voiture v4 ={"DD-DDD-DD", 'D', 4};
+Voiture v5 ={"A", 'A', 1};
 
 #endif
