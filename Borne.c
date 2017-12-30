@@ -17,7 +17,8 @@ float prix_a_payer(char categorie, int duree, int duree_forfait, float prix_forf
 		return duree_forfait * prix_forfait + (duree - duree_forfait) * prix_hors_forfait;
 }
 
-int ajoutServ( int i , monbeauserveur* mesbeauxserveur ) {
+int ajoutServ( int i , monbeauserveur* mesbeauxserveur)
+{
 
   int s = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
   //		       domaine  type         protocle

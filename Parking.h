@@ -10,6 +10,8 @@
 #include <unistd.h>
 #include <string.h>
 
+/* Structures */
+
 typedef struct voiture Voiture;
 
 struct voiture // une voiture
@@ -37,6 +39,14 @@ struct Configuration // un server
   char ip[20];
   Parking donnees;
 };
+
+/* Prototypes */
+
+void viderBuffer(); //vide le buffer pour le scanf
+void ajouterVoiture(Voiture v, Voiture*p); //ajoute la voiture à la liste des voitures du serveur
+float prix_a_payer(char categorie, int duree, Configuration* p); //calcul le prix que doit payer une voiture
+
+/* Variables */
 
 //création de la structure stockant les données du serveur
 Configuration config = {
