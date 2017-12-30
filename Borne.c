@@ -9,6 +9,14 @@ void viderBuffer()
     }
 }
 
+float prix_a_payer(char categorie, int duree, int duree_forfait, float prix_forfait, float prix_hors_forfait)
+{
+	if (duree < duree_forfait)
+		return duree * prix_forfait;
+	else
+		return duree_forfait * prix_forfait + (duree - duree_forfait) * prix_hors_forfait;
+}
+
 int ajoutServ( int i , monbeauserveur* mesbeauxserveur ) {
 
   int s = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
@@ -84,9 +92,9 @@ int main()
 
   do {
 
-    //printf("Saisir le parking voulu : \n"); //
-    //do {                                    //
-    //  if(scanf("%d", &nbPark)!=1)           // plus necessaire car on va demander a tous les parkings en même temps
+    //printf("Saisir le parking voulu : \n"); // plus necessaire car on va
+    //do {                                    // demander a tous les parkings
+    //  if(scanf("%d", &nbPark)!=1)           // en même temps
     //    viderBuffer();                      //
     //} while( nbPark <= -1 && nbPark >= nb); //
     Voiture voiture;
@@ -120,30 +128,65 @@ int main()
       } while( voiture.duree <= 0 );
 
       //pour TOUS les parking : for
+      for (int i = 0; i < nb; i++)
+      {
         //envoyer le numero saisit au server en cours
+        write(mesbeauxserveur[i].socket, &f, sizeof(f));
         //envoyer la catégorie de la voiture : char
+        write(mesbeauxserveur[i].socket, &voiture.categorie, sizeof(voiture.categorie));
         //lire l'ip du serveur : char[20]
+        char ip[20];
+        read(mesbeauxserveur[i].socket, &ip, sizeof(ip));
         //lire la duree du forfait : int
+        int duree_forfait;
+        read(mesbeauxserveur[i].socket, &duree_forfait, sizeof(duree_forfait));
         //lire le prix_forfait : float
+        float prix_forfait;
+        read(mesbeauxserveur[i].socket, &prix_forfait, sizeof(prix_forfait));
         //lire le prix_hors_forfait float
+        float prix_hors_forfait;
+        read(mesbeauxserveur[i].socket, &prix_hors_forfait, sizeof(prix_hors_forfait));
         //faire le calcul magique : on passera par une fonction (a faire)
+        float cout = prix_a_payer(voiture.categorie, voiture.duree, duree_forfait, prix_forfait, prix_hors_forfait);
         //afficher le cout pour la durée demandée : ex : pour 2h
+        printf("Pour le parking %s et une durée de %d, le cout est de %f\n", ip, voiture.duree, cout);
         //afficher le cout pour la durée + 1 h : ex : pour 2+1=3h
+        cout = prix_a_payer(voiture.categorie, voiture.duree+1, duree_forfait, prix_forfait, prix_hors_forfait);
+        printf("Pour le parking %s et une durée de %d + 1 heure, le cout est de %f\n", ip, voiture.duree, cout);
         //afficher le cout pour la durée double : ex : pour 2*2=4h
-      //fin for
-
+        cout = prix_a_payer(voiture.categorie, voiture.duree*2, duree_forfait, prix_forfait, prix_hors_forfait);
+        printf("Pour le parking %s et une durée de %d x 2, le cout est de %f\n", ip, voiture.duree, cout);
+      }
     }
 
     if( f == 2 ) {
       //pour TOUS les parking : for
+      for (int i = 0; i < nb; i++)
+      {
         //envoyer le numero saisit au server en cours
+        write(mesbeauxserveur[i].socket, &f, sizeof(f));
         //lire un entier : int
+        int rep = -1;
+        read(mesbeauxserveur[i].socket, &rep, sizeof(int));
         //si l'entier vaut 0
+        if (rep == 0)
+        {
           //lire l'ip du serveur : char[20]
+          char ip[20];
+          read(mesbeauxserveur[i].socket, &ip, sizeof(ip));
           //lire la durée de stationnement actuelle : int
+          int duree_stationnement;
+          read(mesbeauxserveur[i].socket, &duree_stationnement, sizeof(duree_stationnement));
           //lire la durée du forfait : int
+          int duree_forfait;
+          read(mesbeauxserveur[i].socket, &duree_forfait, sizeof(duree_forfait));
           //lire le prix a payer : float
-      //fin for
+          float cout;
+          read(mesbeauxserveur[i].socket, &cout, sizeof(cout));
+          //afficher les infos
+          printf("Pour le parking %s, la voiture %s est stationnée depuis %d heures.\nLe cout est de %f\n", ip, voiture.plaque, duree_stationnement, cout);
+        }
+      }
     }
 
   } while( f != 9 );
