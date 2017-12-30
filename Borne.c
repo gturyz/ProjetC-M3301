@@ -88,8 +88,9 @@ int main()
     } while( nbPark <= -1 && nbPark >= nb);
     Voiture voiture;
     printf("Saisir plaque de la voiture : \n");
-      while(scanf("%s", &voiture.plaque)!=1)
-        viderBuffer();
+    while(scanf("%s", &voiture.plaque)!=1){
+      viderBuffer();
+    }
     write(mesbeauxserveur[nbPark].socket, voiture.plaque, sizeof(voiture.plaque));
     printf("Quel categorie ? A B C D E \n");
     do {
