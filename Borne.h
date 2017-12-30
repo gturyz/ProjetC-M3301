@@ -15,7 +15,7 @@ typedef struct  // une voiture avec des données par défault
   char plaque[20];
   char categorie;
   int duree;
-}voiture;
+}Voiture;
 
 typedef struct
 {
