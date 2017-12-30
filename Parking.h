@@ -8,8 +8,9 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <unistd.h>
+#include <string.h>
 
-typedef struct Voiture Voiture;
+typedef struct voiture Voiture;
 
 struct voiture // une voiture
 {
@@ -38,7 +39,17 @@ struct Configuration // un server
 };
 
 //création de la structure stockant les données du serveur
-Configuration config = {8001, "127.0.0.1", {{0, 1, 0, 1},{2, 4, 6, 8},{1.5, 2, 2.5, 3, 3.5},{5, 10, 15, 20, 25}}};
-Voiture list_voiture[] = { , , , }
+Configuration config = {
+  8001,
+  "127.0.0.1",
+  {
+    {0, 1, 0, 1},
+    {2, 4, 6, 8},
+    {1.5, 2, 2.5, 3, 3.5},
+    {5, 10, 15, 20, 25}}
+};
+
+//initilisation du stockage des voiture
+Voiture vA ={"AA-AAA-AA", 'A', 1};
 
 #endif

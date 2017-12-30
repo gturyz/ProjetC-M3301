@@ -9,8 +9,20 @@ void viderBuffer()
     }
 }
 
+void ajouterVoiture(Voiture v, Voiture *p)
+{
+
+};
+
 int main()
 {
+	Voiture list_voiture[10];
+	for (int i = 0; i < 10; i++)
+	{
+		ajouterVoiture(vA, &list_voiture[i]);
+	}
+
+
 	int s = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 //		       domaine  type         protocle
 	if(s == -1)
