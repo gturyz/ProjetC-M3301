@@ -16,9 +16,9 @@ int main()
 
   int nb = 0;
   do {
-    if(scanf("%d", nb)!=1)
+    if(scanf("%d", &nb)!=1)
       viderBuffer();
-  } while( nb == 0 );
+  } while( nb <= 0 );
 
 	monbeauserveur mesbeauxserveur[nb];
 
@@ -46,7 +46,6 @@ int main()
 			do {
 				if(scanf("%s", &ipAdr)!=1)
 					viderBuffer();
-				printf("%s\n", ipAdr);
 			} while( inet_pton(AF_INET, ipAdr, &(server.sin_addr)) != 1 );
 
 			//struct server
@@ -65,6 +64,25 @@ int main()
 		}
 
 	}
+
+  int f = 0;
+
+  do {
+
+    do {
+      if(scanf("%d", &f)!=1)
+        viderBuffer();
+    } while( f != 1 && f != 2 && f != 9 );
+
+    if( f == 1 ) {
+      
+    }
+
+    if( f == 2 ) {
+
+    }
+
+  } while( f != 9 );
 
 	//tant que un charactère de fin ne sera pas entré il faut demander si le client veut faire le 2.1 ou le 2.2 du sujet
 
