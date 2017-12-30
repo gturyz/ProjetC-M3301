@@ -9,9 +9,17 @@ void viderBuffer()
     }
 }
 
-void ajouterVoiture(Voiture v, Voiture *p)
+void ajouterVoiture(Voiture v, Voiture* p)
 {
 	*p = v;
+}
+
+float prix_a_payer(char categorie, int duree, Configuration* p)
+{
+	if (duree < p->donnees.heure_forfait[categorie - 'A'])
+		return duree * p->donnees.prix_forfait[categorie - 'A'];
+	else
+		return p->donnees.heure_forfait[categorie - 'A'] * p->donnees.prix_forfait[categorie - 'A'] + (duree - p->donnees.heure_forfait[categorie - 'A']) * p->donnees.prix_hors_forfait[categorie - 'A'];
 }
 
 int main()
@@ -47,63 +55,88 @@ int main()
 		else
 		{
 			printf("bind réussi\n");
-	  		if(listen(s, 1) == -1)
-	  			perror("echec du listen\n");
-	  		else
-	  		{
-	  			printf("reussite du listen\n");
-	  			while(1)
-	  			{
-	  				int s1 = accept(s, NULL, NULL);
-	  				if(s1 == -1)
-	  					perror("echec du accept\n");
-	  				else
-	  				{
-	  					if(fork() == 0)
-							{
-	  						printf("reussite du accept\n");
-								//suite du code
-								int nb;
-								//on regarde ce que la borne nous demande de faire
-								do {
-									if(read(s1, &nb, sizeof(int)) > 0)
+  		if(listen(s, 1) == -1)
+  			perror("echec du listen\n");
+  		else
+  		{
+  			printf("reussite du listen\n");
+  			while(1)
+  			{
+  				int s1 = accept(s, NULL, NULL);
+  				if(s1 == -1)
+  					perror("echec du accept\n");
+  				else
+  				{
+  					if(fork() == 0)
+						{
+  						printf("reussite du accept\n");
+							//suite du code
+							int nb;
+							//on regarde ce que la borne nous demande de faire
+							do {
+								if(read(s1, &nb, sizeof(int)) > 0)
+								{
+									if (nb == 1)
 									{
-										if (nb == 1)
+										char cat;
+										if(read(s1, &cat, sizeof(char)) > 0) //on lit la catégorie
 										{
-											char cat;
-											if(read(s1, &cat, sizeof(char)) > 0) //on lit la catégorie
-											{
-												int i = cat - 'A';
-												write(s1, config.ip, sizeof(config.ip)); //on envoie qui on est
-												write(s1, &config.donnees.heure_forfait[i], sizeof(config.donnees.heure_forfait[i])); // on envoie la durée maximale
-												write(s1, &config.donnees.prix_forfait[i], sizeof(config.donnees.prix_forfait[i])); // on envoie le prix de l'heure quand on est dans le forfait
-												write(s1, &config.donnees.prix_hors_forfait[i], sizeof(config.donnees.prix_hors_forfait[i])); //on envoie le prix de l'heure quand on est hors forfait
-											}
-											else
-												perror("echec du read catégorie");
+											int i = cat - 'A';
+											write(s1, config.ip, sizeof(config.ip)); //on envoie qui on est
+											write(s1, &config.donnees.heure_forfait[i], sizeof(config.donnees.heure_forfait[i])); // on envoie la durée maximale
+											write(s1, &config.donnees.prix_forfait[i], sizeof(config.donnees.prix_forfait[i])); // on envoie le prix de l'heure quand on est dans le forfait
+											write(s1, &config.donnees.prix_hors_forfait[i], sizeof(config.donnees.prix_hors_forfait[i])); //on envoie le prix de l'heure quand on est hors forfait
 										}
-										if (nb == 2)
-										{
-												//lire la plaque de la voiture
-												//si on a la voiture en stock
-													//on envoie 0
-													//on dit qui on est
-													//on donne la duree de stationnement actuelle
-													//on donne la duree du prix_forfait
-													//on donne le prix a payer
-												//sinon
-													//on envoie 1
-										}
+										else
+											perror("echec du read catégorie");
 									}
-									else
-										perror("echec du read type de demande");
-								} while(nb != 9);
-							}
-	  					else
-	  						s1 = accept(s, NULL, NULL);
-	  				}
-	  			}
-	  		}
+									if (nb == 2)
+									{
+										char plaque[20];
+										//lire la plaque de la voiture
+										if(read(s1, &plaque, sizeof(char)) > 0)
+										{
+											for (int i = 0; i < nb_voiture; i++)
+											{
+												//si on a la voiture en stock
+												if (list_voiture[i].plaque == plaque)
+												{
+													//on envoie 0
+													int rep = 0;
+													write(s1, &rep, sizeof(int));
+													//on dit qui on est
+													write(s1, config.ip, sizeof(config.ip));
+													//on donne la duree de stationnement actuelle
+													write(s1, &list_voiture[i].duree, sizeof(list_voiture[i].duree));
+													//on donne la duree du forfait
+													int j = list_voiture[i].categorie - 'A';
+													write(s1, &config.donnees.prix_forfait[j], sizeof(config.donnees.prix_forfait[j]));
+													//on donne le prix a payer
+													float prix = prix_a_payer(list_voiture[i].categorie, list_voiture[i].duree, &config);
+													write(s1, &prix, sizeof(float));
+												}
+												//sinon
+												else
+												{
+													//on envoie 1
+													int rep = 1;
+													write(s1, &rep, sizeof(int));
+												}
+											}
+										}
+										else
+											perror("echec du read plaque");
+									}
+								}
+								else
+									perror("echec du read type de demande");
+							} while(nb != 9);
+						}
+  					else
+  						s1 = accept(s, NULL, NULL);
+  				}
+  			}
+  		}
 		}
 	}
 	return 0;
