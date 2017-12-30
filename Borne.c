@@ -14,7 +14,10 @@ int ajoutServ( int i , monbeauserveur* mesbeauxserveur ) {
   int s = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
   //		       domaine  type         protocle
   if(s == -1)
+  {
     perror("echec de la création de la socket");
+    return 0;
+  }
   else
   {
     printf("création réussie de la socket\n");
@@ -81,11 +84,11 @@ int main()
 
   do {
 
-    //printf("Saisir le parking voulu : \n");
-    //do {
-    //  if(scanf("%d", &nbPark)!=1)
-    //    viderBuffer();
-    //} while( nbPark <= -1 && nbPark >= nb);
+    //printf("Saisir le parking voulu : \n"); //
+    //do {                                    //
+    //  if(scanf("%d", &nbPark)!=1)           // plus necessaire car on va demander a tous les parkings en même temps
+    //    viderBuffer();                      //
+    //} while( nbPark <= -1 && nbPark >= nb); //
     Voiture voiture;
     printf("Saisir plaque de la voiture : \n");
     while(scanf("%s", &voiture.plaque)!=1){
