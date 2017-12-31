@@ -112,7 +112,7 @@ int main()
 									char plaque[20];
 									//lire la plaque de la voiture
                   int x = 0;
-                  do { //tentative de read sécurisé = echec 
+                  do { //tentative de read sécurisé = echec
                     x += read(s1, &plaque, sizeof(char));
                     printf("test\n");
                   } while(x < 20 || plaque[x] != '\0');
@@ -125,6 +125,8 @@ int main()
                   }
                   else
                   {
+                    //on dit qui on est
+                    write(s1, config.ip, sizeof(config.ip));
                     for (int i = 0; i < nb_voiture; i++)
                     {
                       //si on a la voiture en stock
@@ -134,8 +136,6 @@ int main()
                         //on envoie 0
                         int rep = 0;
                         write(s1, &rep, sizeof(int));
-                        //on dit qui on est
-                        write(s1, config.ip, sizeof(config.ip));
                         //on donne la duree de stationnement actuelle
                         write(s1, &list_voiture[i].duree, sizeof(list_voiture[i].duree));
                         //on donne la duree du forfait

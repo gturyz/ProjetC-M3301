@@ -166,15 +166,15 @@ int main()
         write(mesbeauxserveur[i].socket, &f, sizeof(int));
         //envoie de la plaque au serveur
         write(mesbeauxserveur[i].socket, &voiture.plaque, sizeof(voiture.plaque));
+        //lire l'ip du serveur : char[20]
+        char ip[20];
+        read(mesbeauxserveur[i].socket, &ip, sizeof(ip));
         //lire un entier : int
         int rep = -1;
         read(mesbeauxserveur[i].socket, &rep, sizeof(int));
         //si l'entier vaut 0
         if (rep == 0)
         {
-          //lire l'ip du serveur : char[20]
-          char ip[20];
-          read(mesbeauxserveur[i].socket, &ip, sizeof(ip));
           //lire la durée de stationnement actuelle : int
           int duree_stationnement;
           read(mesbeauxserveur[i].socket, &duree_stationnement, sizeof(duree_stationnement));
