@@ -50,7 +50,7 @@ float prix_a_payer(char categorie, int duree, Configuration* p); //calcul le pri
 
 //création de la structure stockant les données du serveur
 Configuration config = {
-  8006,
+  8007,
   "127.0.0.1",
   {
     {0, 1, 0, 1},

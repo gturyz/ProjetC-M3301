@@ -9,6 +9,19 @@ void viderBuffer()
     }
 }
 
+int comparerChaine(char s1[20], char s2[20])
+{
+  int i = 0 , res = 0;
+  while (s1[i] != '\0' || s2[i] != '\0')
+  {
+      if (s1[i] == s2[i])
+        i ++;
+      else
+        res ++;
+  }
+  return res;
+}
+
 void ajouterVoiture(Voiture v, Voiture* p)
 {
 	*p = v;
@@ -69,83 +82,96 @@ int main()
   				else
   				{
   					printf("reussite du accept\n");
-  						//suite du code
-  						int nb;
-  						//on regarde ce que la borne nous demande de faire
-  						do {
-                printf("en attente de la borne\n");
-  							if(read(s1, &nb, sizeof(int)) > 0)
-  							{
-  								if (nb == 1)
-  								{
-                    printf("type de demande : etude de contrat\n");
-  									char cat;
-  									if(read(s1, &cat, sizeof(char)) > 0) //on lit la catégorie
-  									{
-                      printf("envoie de données\n");
-  										int i = cat - 'A';
-  										write(s1, config.ip, sizeof(config.ip)); //on envoie qui on est
-  										write(s1, &config.donnees.heure_forfait[i], sizeof(config.donnees.heure_forfait[i])); // on envoie la durée maximale
-  										write(s1, &config.donnees.prix_forfait[i], sizeof(config.donnees.prix_forfait[i])); // on envoie le prix de l'heure quand on est dans le forfait
-  										write(s1, &config.donnees.prix_hors_forfait[i], sizeof(config.donnees.prix_hors_forfait[i])); //on envoie le prix de l'heure quand on est hors forfait
-  									}
-  									else
-  										perror("echec du read catégorie");
-  								}
-  								if (nb == 2)
-  								{
-                    printf("type de demande : consultation\n");
-  									char plaque[20];
-  									//lire la plaque de la voiture
-  									if(read(s1, &plaque, sizeof(char)) > 0)
-  									{
-  										for (int i = 0; i < nb_voiture; i++)
-  										{
-  											//si on a la voiture en stock
-  											if (list_voiture[i].plaque == plaque)
-  											{
-                          printf("voiture trouvée\n");
-  												//on envoie 0
-  												int rep = 0;
-  												write(s1, &rep, sizeof(int));
-  												//on dit qui on est
-  												write(s1, config.ip, sizeof(config.ip));
-  												//on donne la duree de stationnement actuelle
-  												write(s1, &list_voiture[i].duree, sizeof(list_voiture[i].duree));
-  												//on donne la duree du forfait
-  												int j = list_voiture[i].categorie - 'A';
-  												write(s1, &config.donnees.prix_forfait[j], sizeof(config.donnees.prix_forfait[j]));
-  												//on donne le prix a payer
-  												float prix = prix_a_payer(list_voiture[i].categorie, list_voiture[i].duree, &config);
-  												write(s1, &prix, sizeof(float));
-  											}
-  											//sinon
-  											else
-  											{
-                          printf("voiture non trouvée\n");
-  												//on envoie 1
-  												int rep = 1;
-  												write(s1, &rep, sizeof(int));
-  											}
-  										}
-  									}
-  									else
-  										perror("echec du read plaque");
-  								}
-  							}
-  							else
-                {
-  								perror("echec du read type de demande");
-                  nb = 9;
-                }
-  						} while(nb != 9);
-              close(s1);
-              close(s);
-              return 0;
-            }
-  				}
-  			}
-  		}
+						//suite du code
+						int nb;
+						//on regarde ce que la borne nous demande de faire
+						do
+            {
+              printf("en attente de la borne\n");
+							if(read(s1, &nb, sizeof(int)) > 0)
+							{
+								if (nb == 1)
+								{
+                  printf("type de demande : etude de contrat\n");
+									char cat;
+									if(read(s1, &cat, sizeof(char)) > 0) //on lit la catégorie
+									{
+                    printf("envoie de données\n");
+										int i = cat - 'A';
+										write(s1, config.ip, sizeof(config.ip)); //on envoie qui on est
+										write(s1, &config.donnees.heure_forfait[i], sizeof(config.donnees.heure_forfait[i])); // on envoie la durée maximale
+										write(s1, &config.donnees.prix_forfait[i], sizeof(config.donnees.prix_forfait[i])); // on envoie le prix de l'heure quand on est dans le forfait
+										write(s1, &config.donnees.prix_hors_forfait[i], sizeof(config.donnees.prix_hors_forfait[i])); //on envoie le prix de l'heure quand on est hors forfait
+									}
+									else
+										perror("echec du read catégorie");
+								}
+								if (nb == 2)
+								{
+                  printf("type de demande : consultation\n");
+									char plaque[20];
+									//lire la plaque de la voiture
+                  int x = 0;
+                  do { //tentative de read sécurisé = echec 
+                    x += read(s1, &plaque, sizeof(char));
+                    printf("test\n");
+                  } while(x < 20 || plaque[x] != '\0');
+
+                  if(x > 20)
+                  {
+                    printf("Echec du read de la plaque\n");
+                    int rep = 1;
+                    write(s1, &rep, sizeof(int));
+                  }
+                  else
+                  {
+                    for (int i = 0; i < nb_voiture; i++)
+                    {
+                      //si on a la voiture en stock
+                      if (comparerChaine(list_voiture[i].plaque, plaque) == 0)
+                      {
+                        printf("voiture trouvée\n");
+                        //on envoie 0
+                        int rep = 0;
+                        write(s1, &rep, sizeof(int));
+                        //on dit qui on est
+                        write(s1, config.ip, sizeof(config.ip));
+                        //on donne la duree de stationnement actuelle
+                        write(s1, &list_voiture[i].duree, sizeof(list_voiture[i].duree));
+                        //on donne la duree du forfait
+                        int j = list_voiture[i].categorie - 'A';
+                        write(s1, &config.donnees.prix_forfait[j], sizeof(config.donnees.prix_forfait[j]));
+                        //on donne le prix a payer
+                        float prix = prix_a_payer(list_voiture[i].categorie, list_voiture[i].duree, &config);
+                        write(s1, &prix, sizeof(float));
+                      }
+                      //sinon
+                      else
+                      {
+                        printf("voiture non trouvée\n");
+                        //on envoie 1
+                        int rep = 1;
+                        write(s1, &rep, sizeof(int));
+                      }
+                    }
+                  }
+								}
+									else
+										perror("echec du read plaque");
+							}
+							else
+              {
+								perror("echec du read type de demande");
+                nb = 9;
+              }
+						} while(nb != 9);
+            close(s1);
+            close(s);
+            return 0;
+          }
+				}
+			}
 		}
-	return 0;
+	}
+  return 0;
 }
