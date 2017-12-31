@@ -1,9 +1,11 @@
-Projet: menu.o donnees_partie.o utilitaire.o partie.o jeu.o main.o
-	gcc -o Projet parking.o borne.o -Wall
+Projet: parking.o borne.o
+	gcc -o Parking parking.o -Wall
+	gcc -o Borne borne.o -Wall
 	rm -rf *.o
 
 windows: parking.o borne.o
-	gcc -o Projet parking.o borne.o -Wall
+	gcc -o Parking parking.o -Wall
+	gcc -o Borne borne.o -Wall
 	del *.o
 
 parking.o: Parking.c
